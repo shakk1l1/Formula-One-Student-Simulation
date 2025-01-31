@@ -279,5 +279,33 @@ ylabel('Normalized Fy [-]', 'FontSize', 14);
 title('Pressure = 97 kPa','FontSize', 18);
 grid on;
 %% We now search the values of the parameters [B,C,D,E] of the averaged curves:
-[params_fit, NFY_fit] = magic_curve_fit(slip_angle, P1(3,:));
-plot(slip_angle,NFY_fit, 'ro', slip_angle, P1(3,:),'b')
+global_params_avg = zeros(9,4);
+for i = 1:3
+    [params_fit1, NFY_fit1]  = magic_curve_fit(slip_angle, P1(i,:));
+    [params_fit2, NFY_fit2]  = magic_curve_fit(slip_angle, P2(i,:));
+    [params_fit3, NFY_fit3]  = magic_curve_fit(slip_angle, P3(i,:));
+    global_params_avg(i,:) = params_fit1;
+    global_params_avg(i+3,:) = params_fit2;
+    global_params_avg(i+6,:) = params_fit3;
+end
+p = ['P1'; 'P1'; 'P1'; 'P2'; 'P2'; 'P2'; 'P3'; 'P3';'P3';];
+c = [0; 2; 4; 0; 2; 4; 0; 2; 4];
+global_params_table = table(p, c, global_params_avg(:, 1), global_params_avg(:, 2), ...
+                            global_params_avg(:, 3), global_params_avg(:, 4), ...
+                            'VariableNames', {'Pressure', 'Camber', 'B', 'C', 'D', 'E'});
+
+%% 3D plot for P1:
+camber_angle = [0,2,4];
+camber_angle_fine = 0:0.1:4;
+Z = P1';
+[X, Y] = meshgrid(camber_angle, slip_angle);
+[X_fine, Y_fine] = meshgrid(camber_angle_fine, slip_angle);
+Z_fine = interp2(X, Y, Z, X_fine, Y_fine, 'spline'); % Use 'spline' or 'linear'
+surf(X_fine, Y_fine, Z_fine, 'EdgeColor', 'k');
+xlabel('Camber [°]');
+ylabel('Slip angle [°]');
+zlabel('NFY [-]');
+title('Interpolated Surface');
+shading interp; % Smooth shading
+colorbar;       % Add a color bar
+grid on;
