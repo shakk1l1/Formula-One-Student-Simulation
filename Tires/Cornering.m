@@ -309,3 +309,17 @@ title('Interpolated Surface');
 shading interp; % Smooth shading
 colorbar;       % Add a color bar
 grid on;
+
+%%
+B1654run15_params = struct;
+B1654run15_params.P1.deg0 = global_params_avg(1,:);
+B1654run15_params.P1.deg2 = global_params_avg(2,:);
+B1654run15_params.P1.deg4 = global_params_avg(3,:);
+B1654run15_params.P2.deg0 = global_params_avg(4,:);
+B1654run15_params.P2.deg2 = global_params_avg(5,:);
+B1654run15_params.P2.deg4 = global_params_avg(6,:);
+B1654run15_params.P3.deg0 = global_params_avg(7,:);
+B1654run15_params.P3.deg2 = global_params_avg(8,:);
+B1654run15_params.P3.deg4 = global_params_avg(9,:);
+
+save('B1654run15_params.mat', 'B1654run15_params');
